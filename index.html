@@ -826,18 +826,25 @@
     <audio id="audioPlayer"></audio>
 
     <script>
-        // Configuration - The player will automatically detect files in the music folder
+        // Configuration
         const MUSIC_DIR = './music/';
         
-        // List your music files here (just filenames, the player will extract metadata)
-        // You can also leave this empty and the player will try to detect files
+        // GitHub Auto-Detection Settings
+        // Set these to enable automatic file detection from your GitHub repo
+        const GITHUB_CONFIG = {
+            enabled: true,  // Set to true to auto-detect files from GitHub
+            username: 'diegunther',  // Replace with your username
+            repo: 'protofy',           // Replace with your repo name
+            branch: 'main'                     // Usually 'main' or 'master'
+        };
+        
+        // Manual file list (used if GitHub auto-detection is disabled or fails)
         const musicFiles = [
             'track1.mp3',
             'track2.mp3',
             'track3.mp3',
             'track4.mp3',
             'track5.mp3'
-            // Add more filenames here, or leave empty for auto-detection
         ];
 
         // Player state
@@ -857,6 +864,36 @@
         const nextBtn = document.getElementById('nextBtn');
         const playlistEl = document.getElementById('playlist');
         const trackCountEl = document.getElementById('trackCount');
+
+        // Fetch files from GitHub repository
+        async function fetchGitHubFiles() {
+            const { username, repo, branch } = GITHUB_CONFIG;
+            const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/music?ref=${branch}`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch from GitHub');
+                }
+                
+                const files = await response.json();
+                
+                // Filter for audio files
+                const audioExtensions = ['.mp3', '.ogg', '.wav', '.m4a', '.flac'];
+                const audioFiles = files
+                    .filter(file => file.type === 'file')
+                    .filter(file => audioExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))
+                    .map(file => file.name)
+                    .sort();
+                
+                console.log('✅ Found', audioFiles.length, 'audio files from GitHub');
+                return audioFiles;
+            } catch (error) {
+                console.warn('⚠️ GitHub auto-detection failed:', error.message);
+                console.log('📋 Falling back to manual file list');
+                return null;
+            }
+        }
 
         // Extract track name from filename
         function extractTrackName(filename) {
@@ -887,9 +924,6 @@
                         file: filename,
                         duration: audio.duration
                     };
-                    
-                    // Try to get ID3 tags if available (limited browser support)
-                    // Most browsers don't expose ID3 tags directly, so we use filename
                     resolve(trackInfo);
                 });
                 
@@ -908,8 +942,17 @@
         async function buildPlaylist() {
             playlist = [];
             
+            // Try to get files from GitHub first
+            let files = musicFiles;
+            if (GITHUB_CONFIG.enabled) {
+                const githubFiles = await fetchGitHubFiles();
+                if (githubFiles && githubFiles.length > 0) {
+                    files = githubFiles;
+                }
+            }
+            
             // Load all files
-            for (const filename of musicFiles) {
+            for (const filename of files) {
                 const audioUrl = MUSIC_DIR + filename;
                 const trackInfo = await loadMetadata(audioUrl, filename);
                 playlist.push(trackInfo);
@@ -918,7 +961,7 @@
             if (playlist.length === 0) {
                 // No files found
                 playlist.push({
-                    name: 'No Tracks Found',
+                    name: 'No Tracks Found - Check GitHub Config',
                     file: '',
                     duration: 0
                 });
@@ -966,7 +1009,7 @@
             currentTimeEl.textContent = '00:00';
         }
 
-        // Update track display with typing effect
+        // Update track display
         function updateTrackDisplay(name) {
             const trackNameEl = trackName;
             trackNameEl.classList.remove('paused');
@@ -976,7 +1019,6 @@
                 trackNameEl.classList.add('paused');
             }
             
-            // Simple update without cursor manipulation
             trackNameEl.innerHTML = name + '<span class="cursor"></span>';
         }
 
@@ -1002,7 +1044,6 @@
                 })
                 .catch(err => {
                     console.error('Playback failed:', err);
-                    // Track file might not exist yet
                     playBtn.textContent = '✕ Error';
                     setTimeout(() => {
                         playBtn.textContent = '► Play';
