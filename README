@@ -1,0 +1,142 @@
+# DedSec Audio Terminal 🎧
+
+A minimalist music player with Watch Dogs 2 DedSec-inspired hacker terminal aesthetics. Built for GitHub Pages.
+
+![Version](https://img.shields.io/badge/version-1.0.0-white.svg)
+![License](https://img.shields.io/badge/license-MIT-white.svg)
+
+## 🎨 Features
+
+- **Watch Dogs 2 Aesthetic**: Monochrome terminal UI with heavy ASCII hatching
+- **Pixelated Grid Overlays**: Multi-layered crosshatch patterns and dot matrices
+- **Terminal Effects**: CRT scanlines, flicker, and noise
+- **Full Playback Controls**: Play/pause, next/previous, progress scrubbing
+- **Keyboard Shortcuts**: Spacebar (play/pause), Arrow keys (navigation)
+- **Responsive Design**: Works on desktop and mobile
+- **Static Hosting**: No backend required - perfect for GitHub Pages
+
+## 🚀 Live Demo
+
+Visit: `https://[your-username].github.io/[repo-name]/`
+
+## 📦 Installation
+
+### Quick Setup (Web Interface)
+
+1. **Fork this repository** or create a new one
+2. Upload `index.html` to your repository
+3. Create a `music/` folder
+4. Upload your MP3/OGG files to the `music/` folder
+5. Edit `index.html` and update the playlist array
+6. Enable GitHub Pages in Settings → Pages
+7. Done! Visit your site
+
+### Detailed Guide
+
+See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete step-by-step instructions.
+
+## 🎵 Adding Music
+
+1. Add your audio files to the `music/` directory
+2. Update the playlist in `index.html`:
+
+```javascript
+const playlist = [
+    { name: 'Your Track Name', file: 'filename.mp3' },
+    { name: 'Another Track', file: 'another.mp3' },
+];
+```
+
+Supported formats: MP3, OGG, WAV
+
+## ⌨️ Keyboard Controls
+
+- **Space**: Play/Pause
+- **→**: Next track  
+- **←**: Previous track
+- **Click Progress Bar**: Seek
+
+## 🎨 Customization
+
+### Colors
+
+Edit CSS variables at the top of `index.html`:
+
+```css
+:root {
+    --terminal-black: #000000;
+    --terminal-white: #ffffff;
+    --terminal-cyan: #4db8ff;
+}
+```
+
+### ASCII Intensity
+
+Adjust opacity values in hatching patterns:
+- Lower values (0.01) = subtle
+- Higher values (0.05) = intense
+
+### Grid Patterns
+
+Modify `repeating-linear-gradient` values for different hatch densities.
+
+## 📁 File Structure
+
+```
+dedsec-audio-player/
+├── index.html              # Main player (single file!)
+├── music/                  # Your audio files
+│   ├── track1.mp3
+│   ├── track2.mp3
+│   └── ...
+└── README.md
+```
+
+## 🛠️ Tech Stack
+
+- Pure HTML/CSS/JavaScript
+- No dependencies
+- No build process
+- No backend required
+- Fonts: Google Fonts (JetBrains Mono, Orbitron)
+
+## 📱 Browser Support
+
+- ✅ Chrome/Edge (latest)
+- ✅ Firefox (latest)
+- ✅ Safari (latest)
+- ✅ Mobile browsers
+
+## 🔒 Privacy
+
+- No tracking
+- No analytics
+- No external API calls (except fonts)
+- All playback is local
+- No data collection
+
+## 📜 License
+
+MIT License - feel free to use, modify, and distribute.
+
+## 🎯 Roadmap
+
+- [ ] Volume control
+- [ ] Shuffle/repeat modes
+- [ ] Equalizer visualization
+- [ ] Local storage for last played track
+- [ ] M3U playlist import
+
+## 💡 Inspiration
+
+Inspired by the terminal interfaces in Watch Dogs 2 and DedSec's hacker aesthetic.
+
+## 🤝 Contributing
+
+Feel free to open issues or submit pull requests!
+
+---
+
+**⚡ Built with terminal aesthetics and ASCII art**
+
+*DedSec Audio Terminal - Unauthorized playback system*
