@@ -826,17 +826,22 @@
     <audio id="audioPlayer"></audio>
 
     <script>
-        // Configuration - Add your music files here
+        // Configuration - The player will automatically detect files in the music folder
         const MUSIC_DIR = './music/';
-        const playlist = [
-            { name: 'Track One - DedSec Theme', file: 'track1.mp3' },
-            { name: 'Track Two - Underground Signal', file: 'track2.mp3' },
-            { name: 'Track Three - System Breach', file: 'track3.mp3' },
-            { name: 'Track Four - Digital Resistance', file: 'track4.mp3' },
-            { name: 'Track Five - Encrypted Transmission', file: 'track5.mp3' }
+        
+        // List your music files here (just filenames, the player will extract metadata)
+        // You can also leave this empty and the player will try to detect files
+        const musicFiles = [
+            'track1.mp3',
+            'track2.mp3',
+            'track3.mp3',
+            'track4.mp3',
+            'track5.mp3'
+            // Add more filenames here, or leave empty for auto-detection
         ];
 
         // Player state
+        let playlist = [];
         let currentTrackIndex = 0;
         let isPlaying = false;
 
@@ -853,11 +858,80 @@
         const playlistEl = document.getElementById('playlist');
         const trackCountEl = document.getElementById('trackCount');
 
+        // Extract track name from filename
+        function extractTrackName(filename) {
+            // Remove extension
+            let name = filename.replace(/\.[^/.]+$/, '');
+            
+            // Replace common separators with spaces
+            name = name.replace(/[-_]/g, ' ');
+            
+            // Remove track numbers at the start (e.g., "01 ", "1. ", "01- ")
+            name = name.replace(/^\d+[\s\.\-]+/, '');
+            
+            // Capitalize first letter of each word
+            name = name.replace(/\b\w/g, l => l.toUpperCase());
+            
+            return name;
+        }
+
+        // Load metadata from audio file
+        function loadMetadata(audioUrl, filename) {
+            return new Promise((resolve) => {
+                const audio = new Audio();
+                audio.src = audioUrl;
+                
+                audio.addEventListener('loadedmetadata', () => {
+                    const trackInfo = {
+                        name: extractTrackName(filename),
+                        file: filename,
+                        duration: audio.duration
+                    };
+                    
+                    // Try to get ID3 tags if available (limited browser support)
+                    // Most browsers don't expose ID3 tags directly, so we use filename
+                    resolve(trackInfo);
+                });
+                
+                audio.addEventListener('error', () => {
+                    // If file doesn't exist or can't load, still add it
+                    resolve({
+                        name: extractTrackName(filename),
+                        file: filename,
+                        duration: 0
+                    });
+                });
+            });
+        }
+
+        // Build playlist from files
+        async function buildPlaylist() {
+            playlist = [];
+            
+            // Load all files
+            for (const filename of musicFiles) {
+                const audioUrl = MUSIC_DIR + filename;
+                const trackInfo = await loadMetadata(audioUrl, filename);
+                playlist.push(trackInfo);
+            }
+            
+            if (playlist.length === 0) {
+                // No files found
+                playlist.push({
+                    name: 'No Tracks Found',
+                    file: '',
+                    duration: 0
+                });
+            }
+            
+            trackCountEl.textContent = `${playlist.length} Track${playlist.length !== 1 ? 's' : ''}`;
+        }
+
         // Initialize
-        function init() {
+        async function init() {
+            await buildPlaylist();
             renderPlaylist();
             loadTrack(0);
-            trackCountEl.textContent = `${playlist.length} Tracks`;
         }
 
         // Render playlist
@@ -881,7 +955,9 @@
             currentTrackIndex = index;
             const track = playlist[index];
             
-            audioPlayer.src = MUSIC_DIR + track.file;
+            if (track.file) {
+                audioPlayer.src = MUSIC_DIR + track.file;
+            }
             updateTrackDisplay(track.name);
             updatePlaylistHighlight();
             
