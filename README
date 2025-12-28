@@ -2,18 +2,15 @@
 
 A minimalist music player with hacker terminal aesthetics. Built for GitHub Pages.
 
-![Version](https://img.shields.io/badge/version-1.0.0-white.svg)
-![License](https://img.shields.io/badge/license-MIT-white.svg)
-
 ## 🎨 Features
 
-- **Watch Dogs 2 Aesthetic**: Monochrome terminal UI with heavy ASCII hatching
-- **Pixelated Grid Overlays**: Multi-layered crosshatch patterns and dot matrices
-- **Terminal Effects**: CRT scanlines, flicker, and noise
-- **Full Playback Controls**: Play/pause, next/previous, progress scrubbing
-- **Keyboard Shortcuts**: Spacebar (play/pause), Arrow keys (navigation)
-- **Responsive Design**: Works on desktop and mobile
-- **Static Hosting**: No backend required - perfect for GitHub Pages
+- Watch Dogs 2 Aesthetic: Monochrome terminal UI with heavy ASCII hatching
+- Pixelated Grid Overlays: Multi-layered crosshatch patterns and dot matrices
+- Terminal Effects: CRT scanlines, flicker, and noise
+- Full Playback Controls: Play/pause, next/previous, progress scrubbing
+- Keyboard Shortcuts: Spacebar (play/pause), Arrow keys (navigation)
+- Responsive Design: Works on desktop and mobile
+- Static Hosting: No backend required - perfect for GitHub Pages
 
 ## 🚀 Live Demo
 
@@ -23,7 +20,7 @@ Visit: `https://[your-username].github.io/[repo-name]/`
 
 ### Quick Setup (Web Interface)
 
-1. **Fork this repository** or create a new one
+1. Fork this repository or create a new one
 2. Upload `index.html` to your repository
 3. Create a `music/` folder
 4. Upload your MP3/OGG files to the `music/` folder
@@ -51,10 +48,10 @@ Supported formats: MP3, OGG, WAV
 
 ## ⌨️ Keyboard Controls
 
-- **Space**: Play/Pause
-- **→**: Next track  
-- **←**: Previous track
-- **Click Progress Bar**: Seek
+- Space: Play/Pause
+- →: Next track  
+- ←: Previous track
+- Click Progress Bar: Seek
 
 ## 🎨 Customization
 
@@ -137,6 +134,6 @@ Feel free to open issues or submit pull requests!
 
 ---
 
-**⚡ Built with terminal aesthetics and ASCII art**
+⚡ Built with terminal aesthetics and ASCII art
 
 *DedSec Audio Terminal - Unauthorized playback system*
